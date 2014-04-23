@@ -1,0 +1,33 @@
+[user]
+	name = Joey Ekstrom
+	email = joey.ekstrom@dishdigital.com
+[gui]
+    recentrepo = /Volumes/Users/jce/boxes/rsdvr/move/rsdvr
+[ui]                                                                             
+    color = auto                                                                 
+[color]                                                                          
+    ui = auto                                                                    
+[alias]                                                                          
+    stat = status                                                                  
+    st = status                                                                  
+    co = checkout                                                                
+    ci = commit                                                                  
+    br = branch                                                                  
+    l = log --stat                                                               
+[merge]                                                                          
+    tool = vimdiff                                                               
+[core]                                                                           
+	excludesfile = /Volumes/Users/jce/.gitignore_global
+
+[diff]
+	tool = vimdiff
+[rebase]
+	autosquash = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[push]
+	default = nothing
