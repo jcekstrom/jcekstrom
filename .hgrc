@@ -1,5 +1,6 @@
 [ui]
-username = Joey Ekstrom <joey@ryati.com>
+username=Joey Ekstrom <joey.ekstrom@dishdigital.com>
 
-[extensions]   
+[extensions]
 hgext.bookmarks =
+eol=

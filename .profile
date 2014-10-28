@@ -12,15 +12,14 @@
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
     if [ -f "$HOME/.bashrc" ]; then
-    . "$HOME/.bashrc"
+        . "$HOME/.bashrc"
     fi
 fi
 
 # setup bash completion
 if [ -f /usr/local/etc/bash_completion ]; then
     . /usr/local/etc/bash_completion
-fi  
-
+fi
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "/usr/local/bin" ] ; then
