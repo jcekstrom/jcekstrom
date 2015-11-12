@@ -55,6 +55,12 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+if [ -f "${HOME}/.gpg-agent-info" ]; then
+    . "${HOME}/.gpg-agent-info"
+    export GPG_AGENT_INFO
+    #export SSH_AUTH_SOCK
+fi
+
 # This is used in conjuntion with python virtualenv package
 # create a new env in ~/.pyenv then just "activate name" and it will use that python env
 activate() {

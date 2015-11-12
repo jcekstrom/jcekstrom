@@ -18,7 +18,7 @@
     tool = vimdiff                                                               
 [core]                                                                           
 	excludesfile = /Volumes/Users/jce/.gitignore_global
-	autocrlf = true
+    #autocrlf = true
 
 [diff]
 	tool = vimdiff

@@ -47,6 +47,10 @@ fi
 #    PATH=$PATH:$HOME/.gem/bin
 # fi
 
+#gpg-agent --daemon --enable-ssh-support --write-env-file "${HOME}/.gpg-agent-info"
+#gpg-agent --daemon --write-env-file "${HOME}/.gpg-agent-info"
+
+
 PATH=./venv/bin:./pyenv/bin:$PATH
 export PATH
 
