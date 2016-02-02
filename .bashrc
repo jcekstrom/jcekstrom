@@ -55,6 +55,12 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+if [ -f "${HOME}/.gpg-agent-info" ]; then
+    . "${HOME}/.gpg-agent-info"
+    export GPG_AGENT_INFO
+    #export SSH_AUTH_SOCK
+fi
+
 # This is used in conjuntion with python virtualenv package
 # create a new env in ~/.pyenv then just "activate name" and it will use that python env
 activate() {
@@ -78,8 +84,10 @@ if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
-if [ -f $(brew --prefix)/share/bash-completion/bash_completion ]; then
-    . $(brew --prefix)/share/bash-completion/bash_completion
+if [[ $(type -P "brew") ]]; then
+    if [ -f $(brew --prefix)/share/bash-completion/bash_completion ]; then
+        . $(brew --prefix)/share/bash-completion/bash_completion
+    fi
 fi
 
 #export CLICOLOR_FORCE=1
@@ -88,14 +96,48 @@ export LESS="-R"
 
 export EDITOR=vim
 
-if [[ $TERM == 'screen' ]]; then
-    export SSH_AUTH_SOCK=$HOME/.screen_ssh_auth_sock
-else
-    # If this is an SSH session, link to this SSH_AUTH_SOCK
-    rm -f $HOME/.screen_ssh_auth_sock
-    ln -sf $SSH_AUTH_SOCK $HOME/.screen_ssh_auth_sock
+env=~/.ssh/agent.env
+
+agent_is_running() {
+    if [ "$SSH_AUTH_SOCK" ]; then
+        # ssh-add returns:
+        #   0 = agent running, has keys
+        #   1 = agent running, no keys
+        #   2 = agent not running
+        ssh-add -l >/dev/null 2>&1 || [ $? -eq 1 ]
+    else
+        false
+    fi
+}
+
+agent_has_keys() {
+    ssh-add -l >/dev/null 2>&1
+}
+
+agent_load_env() {
+    . "$env" >/dev/null
+}
+
+agent_start() {
+    (umask 077; ssh-agent >"$env")
+    . "$env" >/dev/null
+}
+
+if ! agent_is_running; then
+    agent_load_env
 fi
-# If this is a shell inside of screen... Always point to SSH_AUTH_SOCK symlink
+
+# if your keys are not stored in ~/.ssh/id_rsa.pub or ~/.ssh/id_dsa.pub, you'll need
+# to paste the proper path after ssh-add
+if ! agent_is_running; then
+    agent_start
+    ssh-add
+elif ! agent_has_keys; then
+    ssh-add
+fi
+
+unset env
+
 alias pyclean="find . -iname '*.pyc' | xargs rm -f"
 alias gff="git flow feature"
 
