@@ -1,0 +1,61 @@
+#!/bin/bash
+
+BUILD_FILES=false
+
+for arg in $*; do
+    case $arg in
+        "--clean")
+            BUILD_FILES=true            
+            ;;
+    esac
+done
+
+# Set some nice defaults for the ".gentags.conf"
+PYTHON_DIRS=
+DIRECTORIES="."
+FILE_TYPES="cpp c py pyx pxd html js css xml"
+CSCOPE_ARGS="-b"
+CTAGS_ARGS="--excmd=number --langmap=html:+.xhtml"
+
+# Override DIRECTORIES and FILE_TYPES in local .gentags.conf file
+CONF_FILE=".gentags.conf"
+# Load "USER config"
+if [ -f "$HOME/$CONF_FILE" ]; then
+    source "$HOME/$CONF_FILE"
+fi
+# Load "Project config"
+if [ -f $CONF_FILE ]; then
+    source $CONF_FILE
+fi
+
+CSCOPE_FILES="cscope.files"
+
+genfiles() {
+    if [ -f $CSCOPE_FILES ]; then
+      rm $CSCOPE_FILES;
+    fi
+
+    for dir in $DIRECTORIES $PYTHON_DIRS; do
+        echo "Searching $dir";
+        for ext in $FILE_TYPES; do
+            find $dir -name "*.$ext" >> $CSCOPE_FILES;
+        done
+    done
+}
+
+# generate the file list if doesn't exists, or --clean set
+if [ -f $CSCOPE_FILES ]; then
+    if $BUILD_FILES; then
+        genfiles
+    else
+        echo "$CSCOPE_FILES exists. skipping generation use --clean to regenerate."
+    fi
+else
+    genfiles
+fi
+
+echo "Running cscope"
+cscope $CSCOPE_ARGS
+echo "Running ctags"
+ctags -L $CSCOPE_FILES $CTAGS_ARGS 
+
