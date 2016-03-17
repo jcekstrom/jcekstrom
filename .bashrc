@@ -139,6 +139,4 @@ fi
 unset env
 
 alias pyclean="find . -iname '*.pyc' | xargs rm -f"
-alias gff="git flow feature"
 
-alias qss='curl -H "X-User-Id: 2" -H "X-Device-Id: e878f9b1-b793-5eba-9422-642b2b738ab0"'

@@ -5,7 +5,7 @@ BUILD_FILES=false
 for arg in $*; do
     case $arg in
         "--clean")
-            BUILD_FILES=true            
+            BUILD_FILES=true
             ;;
     esac
 done
@@ -29,6 +29,7 @@ if [ -f $CONF_FILE ]; then
 fi
 
 CSCOPE_FILES="cscope.files"
+CTAGS_FILES=".ctags.files"
 
 genfiles() {
     if [ -f $CSCOPE_FILES ]; then
@@ -38,7 +39,8 @@ genfiles() {
     for dir in $DIRECTORIES $PYTHON_DIRS; do
         echo "Searching $dir";
         for ext in $FILE_TYPES; do
-            find $dir -name "*.$ext" >> $CSCOPE_FILES;
+            find $dir -name "*.$ext" >> $CTAGS_FILES;
+            find $dir -name "*.$ext" | sed 's|\(.*\)|"\1"|' >> $CSCOPE_FILES;
         done
     done
 }
@@ -57,5 +59,5 @@ fi
 echo "Running cscope"
 cscope $CSCOPE_ARGS
 echo "Running ctags"
-ctags -L $CSCOPE_FILES $CTAGS_ARGS 
+ctags -L $CTAGS_FILES $CTAGS_ARGS
 
