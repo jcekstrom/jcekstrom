@@ -22,4 +22,3 @@ fi
 export PATH
 
 source "$HOME/.bashrc"
-
